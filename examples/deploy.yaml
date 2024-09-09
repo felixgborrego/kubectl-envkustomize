@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: envoy
+  template:
+    metadata:
+      labels:
+        app: envoy
+    spec:
+      containers:
+        - name: envoy
+          image: ${{{ ENV_KUBECTL_ENVOY_IMAGE }}} # Example injecting environment variables dynamically
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: envoy-config
+              mountPath: /etc/envoy/envoy.yaml
+              subPath: envoy.yaml
+            - name: static-file
+              mountPath: /etc/envoy/static-file.html
+              subPath: static-file.html
+          # Example setting resources dynamically from environment variables
+          resources:
+            requests:
+              memory: "${{{ ENV_KUBECTL_MEMORY_REQUEST }}}"
+              cpu: "${{{ ENV_KUBECTL_CPU_REQUEST }}}"
+            limits:
+              memory: "${{{ ENV_KUBECTL_CPU_LIMIT }}}"
+              cpu: "${{{ ENV_KUBECTL_CPU_LIMIT }}}"
+
+
+          env:
+            # Example injecting environment variables dynamically
+            - name: ENVOY_LOG_LEVEL
+              value: ${{{ ENV_KUBECTL_ENVOY_LOG_LEVEL }}}
+
+            # Example injecting ALL environment variables with a prefix dynamically
+            # check the rendered.yaml to see the result!
+            - name: ${{{env-expand://ENV_KUBECTL_ENVOY}}}
+              value: ${{{env-expand://ENV_KUBECTL_ENVOY}}}
+      volumes:
+        - name: envoy-config
+          configMap:
+            name: envoy-config
+            items:
+              - key: envoy.yaml
+                path: envoy.yaml
+        - name: static-file
+          configMap:
+            name: envoy-config
+            items:
+              - key: static-file.html
+                path: static-file.html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: envoy-service
+spec:
+  selector:
+    app: envoy
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

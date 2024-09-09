@@ -1,0 +1,41 @@
+# example to make envoy serve a static file
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: envoy-config
+data:
+  envoy.yaml: |
+    static_resources:
+      listeners:
+        - name: listener_0
+          address:
+            socket_address:
+              address: 0.0.0.0
+              port_value: 8080
+          filter_chains:
+            - filters:
+                - name: envoy.filters.network.http_connection_manager
+                  typed_config:
+                    "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                    stat_prefix: ingress_http
+                    route_config:
+                      name: local_route
+                      virtual_hosts:
+                        - name: local_service
+                          domains: ["*"]
+                          routes:
+                            - match:
+                                prefix: "/"
+                              direct_response:
+                                status: 200
+                                body:
+                                  filename: /etc/envoy/static-file.html
+                    http_filters:
+                      - name: envoy.filters.http.router
+  static-file.html: |
+    <html>
+      <body>
+        <h1> ${{{ ENV_KUBECTL_WELCOME_TEXT }}} </h1>
+        <p>This is a static file served by Envoy.</p>
+      </body>
+    </html>
