@@ -1,11 +1,12 @@
-# Kubectl Plugin to Add Support for Environment Variable Evaluation in Kustomize
+# Kubectl Plugin for Environment Variable Support in Kustomize
 
-This plugin is a `kubectl` plugin that adds support for evaluating environment variables in Kustomize overlays.
+A `kubectl` plugin that enables the use of environment variables in Kustomize overlays.
+![image](docs/envkustomize.jpg) 
 
-![image](docs/envkustomize.png) 
 ## Why This Plugin?
 
-I've used Kustomize extensively over the years, and I've always missed the ability to evaluate environment variables in overlays. The recommended approach, using patches and overlays, is just too much work when managing a large fleet of clusters. It can be a pain even for basic tasks like patching an image name!
+I've used Kustomize extensively over the years, and I've always missed the ability to evaluate environment variables in overlays.
+The recommended approach, using patches and overlays, is just too much work when managing a large fleet of clusters. It can be a pain, even for basic tasks like patching an image name!
 
 This plugin is largely a response to the frustrations described here:
 
@@ -21,10 +22,30 @@ The plugin is a lightweight wrapper around the official Kustomize API (krusty) [
 
 ```bash
 # You need to run it in a valid Kustomize overlay folder like this:
-cd examples
+cd /examples/overlay/env-dev
 kubectl envkustomize render
 # Check the rendered.yaml file generated in the same folder
 ```
+
+## Installation
+
+* Homebrew
+
+```bash
+brew tap felixgborrego/kubectl-envkustomize https://github.com/felixgborrego/kubectl-envkustomize
+brew install kubectl-envkustomize
+```
+
+* Manually (Linux) / CI/CD
+
+```bash
+      - name: Install kubectl-envkustomize
+        run: |
+          curl -L "https://github.com/felixgborrego/kubectl-envkustomize/releases/download/v0.0.1/kubectl-envkustomize_Linux_i386.tar.gz" -o kubectl-envkustomize.tar.gz
+          tar -xzf kubectl-envkustomize.tar.gz
+          sudo mv kubectl-envkustomize /usr/local/bin/
+```
+
 
 ### Evaluations Supported
 
