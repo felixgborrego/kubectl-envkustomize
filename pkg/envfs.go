@@ -1,9 +1,12 @@
 package pkg
 
-import "path/filepath"
-import "sigs.k8s.io/kustomize/kyaml/filesys"
+import (
+	"path/filepath"
 
-// EnvAwareFileSystem is a wrapper around a Kustomize FileSystem that handles environment variable substitution.
+	"sigs.k8s.io/kustomize/kyaml/filesys"
+)
+
+// EnvAwareFileSystem is a light wrapper around a Kustomize FileSystem that handles environment variable substitution.
 // it delegates all operations to the original Kustomize FileSystem, but reads files with environment variable substitution.
 type EnvAwareFileSystem struct {
 	wrapped               filesys.FileSystem

@@ -1,7 +1,7 @@
 # Kubectl Plugin for Environment Variable Support in Kustomize
 
 A `kubectl` plugin that enables the use of environment variables in Kustomize overlays.
-![image](docs/envkustomize.jpg) 
+![image](docs/envkustomize?v1.jpg) 
 
 ## Why This Plugin?
 
