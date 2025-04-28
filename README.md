@@ -1,12 +1,15 @@
 # Kubectl Plugin for Environment Variable Support in Kustomize
 
 A `kubectl` plugin that enables the use of environment variables in Kustomize overlays.
-![image](docs/envkustomize?v1.jpg) 
+
+![image](docs/envkustomize_v1.jpg) 
 
 ## Why This Plugin?
 
 I've used Kustomize extensively over the years, and I've always missed the ability to evaluate environment variables in overlays.
-The recommended approach, using patches and overlays, is just too much work when managing a large fleet of clusters. It can be a pain, even for basic tasks like patching an image name!
+
+The recommended approach, using patches and overlays, is just ugly and too much work when managing a large fleet of clusters. 
+It can be a pain, even for basic tasks like patching an image name!
 
 This plugin is largely a response to the frustrations described here:
 
@@ -35,6 +38,16 @@ kubectl envkustomize render
 brew tap felixgborrego/kubectl-envkustomize https://github.com/felixgborrego/kubectl-envkustomize
 brew install kubectl-envkustomize
 ```
+
+* Build from source
+
+```bash
+# Install in your $GOPATH/bin
+go install
+# if the $GOPATH/bin is not in your $PATH, you can add it like this: 
+export PATH=$PATH:$GOPATH/bin
+```
+
 
 * Manually (Linux) / CI/CD
 
